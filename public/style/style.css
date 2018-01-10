@@ -1,0 +1,17 @@
+html {
+	padding: 1em;
+}
+
+body{
+	font-size: 12px;
+}
+
+#output{
+	padding: 1em;
+	height: 50vh;
+	max-height: 50vh;
+	overflow: auto;
+
+	font-family: terminus;
+	border: 1px #aaa inset;
+}

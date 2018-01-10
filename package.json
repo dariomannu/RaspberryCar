@@ -1,0 +1,32 @@
+{
+  "name": "RaspberryCar",
+  "description": "R/C Car control software",
+  "author": "Dario M. Mannu",
+  "homepage": "/",
+  "version": "1.0.0",
+  "private": false,
+  "dependencies": {
+    "@dariomannu/adafruit-pca9685": "https://github.com/dariomannu/adafruit-pca9685/archive/0.2.0.tar.gz",
+    "babel-cli": "^6.26.0",
+    "babel-preset-node8": "^1.2.0",
+    "express": "^4.16.2",
+    "jsdom": "^11.5.1",
+    "node-aplay": "^1.0.3",
+    "onoff": "^1.1.9",
+    "rpi-gpio": "0.0.3",
+    "rxjs": "^5.0.0",
+    "socket.io": "^2.0.4",
+    "socket.io-client": "^2.0.4",
+    "tween.js": "^16.6.0"
+  },
+  "scripts": {
+    "test": "babel-node test.js",
+    "start": "sudo node app.js",
+    "dev": "babel-node app.js --hw dummy"
+  },
+  "devDependencies": {
+    "jasmine": "^2.8.0",
+    "mocha": "^4.0.1",
+    "rxjs-marbles": "^2.3.0"
+  }
+}
