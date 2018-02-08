@@ -1,82 +1,62 @@
+#!/usr/bin/env node
 'use strict'
 
-const express = require('express')
-const app = express()
-const path = require('path')
-const server = require('http').createServer(app)
-const io = require('socket.io')(server)
-const port = process.env.PORT || 31337
-//const movement_controller = require('./lib/controllers/movement/gpio-controller.js');
-//const movement_controller = require('./lib/controllers/movement/pwm-controller.js');
-const movement_controller = require('./lib/controllers/movement/dummy-controller.js');
-const sound_controller = require('./lib/sound-controller.js')
+/*  just  */ require('babel-register')
+const argv = require('commander')
 
-server.listen(port, '::', function () {
-  console.log('Server listening at port %d', port);
-})
+argv
+  .version('1.1.0')
+	  .option('-c, --controller [controller]', 'Hardware controller [pwm]', 'pwm')
+  .version('1.2.0')
+	  .option('-h, --host [host]', 'Host [host]', '::')
+	  .option('-p, --port [port]', 'Port [port]', '31337')
+  .parse(process.argv)
 
-app.use(express.static(path.join(__dirname, 'public')))
+const hardware = require('./lib/controllers/hardware')(argv.controller)
+const sound    = require('./lib/controllers/hardware/sound.js')
+const router   = require('./web/router.js')
 
-var emergencyStopTimer
-const emergencyStop = () => {
-	console.log('Signal lost. Triggering emergency breaks')
-	movement_controller.reset()
+// Inputs
+const web   = require('./web')
+//const terminal = require('./inputs/terminal') // (terminal_router(hardware, sound))
+//const ai = require('./inputs/ai')             // (ai_router(hardware, sound))
+
+async function main() {
+	console.log(`Setting up "${argv.controller}" hardware controller`)
+	await hardware.setup()
+		.catch(e => {
+			console.error(`Hardware setup error ${e.stack}`)
+			process.exit(1)
+		})
+
+	console.log('Setting up web interface')
+	const route = router(hardware, sound)
+
+	web.createServer(argv.port, argv.host, route)
+		.then(() => console.log(`Web Interface listening on ${argv.host}:${argv.port}`))
+		.catch(e=>{
+			console.error(e)
+			route('RESET')
+		})
+
+	process.on( 'SIGINT', function() {
+		console.log('SIGINT caught. Exiting')
+		hardware
+			.reset()
+			.then(process.exit.bind(0))
+	})
+
+	process.on('uncaughtException', function(err) {
+		console.error(err.stack)
+		hardware
+			.reset()
+			.then(process.exit.bind(1))
+	})
+
+	process.on('unhandledRejection', (err, p) => {
+		console.log('Unhandled Promise rejection', p, err.stack);
+	})
 }
 
-io.on('connection', function (socket) {
-	socket.on('HEARTBEAT', function(data) {
-		emergencyStopTimer && clearTimeout(emergencyStopTimer)
-		emergencyStopTimer = setTimeout(emergencyStop, 1000)
-		//socket.emit('MESSAGE', { type: 'heartbeat', q: data.t, t: (new Date()).getTime() })
-	})
-
-	socket.on('COMMAND', function(data) {
-		var p
-		switch(data.command) {
-			case 'MOVE':
-				console.log('MOVE:', data)
-				p=movement_controller.move(data)
-				break
-			case 'GLIDE':
-				console.log('GLIDE:', data);
-				break;
-			case 'POWER':
-				console.log('POWER:', data)
-				p=movement_controller.power(data.target, data.value)
-				break
-			case 'RESET':
-				console.log('RESET');
-				p=movement_controller.reset();
-				break
-			case 'SFX':
-				console.log('SFX:', data);
-				p=sound_controller.play(data.file)
-				break
-			case 'HORN':
-				console.log('HORN:', data);
-				p=sound_controller.horn()
-				break
-			case 'ENGINE':
-				p=sound_controller.engine()
-				break
-			case 'MEOW':
-				p=sound_controller.meow()
-				break
-			default:
-				p=Promise.reject('Unknown command')
-				break
-		}
-
-		return p
-			.then(() => socket.emit(  'MESSAGE', { data }))
-			.catch((e) => socket.emit('~ERROR~', { data, error: e }))
-	})
-})
-
-process.on( 'SIGINT', function() {
-	console.log('SIGINT caught. Exiting')
-	movement_controller
-		.reset()
-		.then(process.exit.bind(0))
-});
+main()
 

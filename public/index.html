@@ -1,27 +1,61 @@
 <!DOCTYPE html>  
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>Remote</title>
+<head>
+	<meta charset="utf-8">
+	<title>RaspberryCar</title>
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-		<link rel="stylesheet" href="style/bootstrap.min.css" media="all" />
-		<link rel="stylesheet" href="style/style.css" media="all" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+	<link rel="stylesheet" href="style/bootstrap.min.css" media="all" />
+	<link rel="stylesheet" href="style/style.css" media="all" />
 
 <body>
-	<script src="/js/lib/socket.io.slim.js"></script>
-	<script src="js/lib/Rx.js"></script>
+	<script src="js/vendor/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"></script>
+	<script src="js/vendor/popper-1.12.9.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"></script>
+	<script src="js/vendor/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4"></script>
+	<script src="js/vendor/socket.io.slim.js"></script>
+	<script src="js/vendor/Rx.js"></script>
+
 	<script type="module" src="js/main.js"></script>
 
 	<div class="row">
-		<div class="col-md-8">
+
+		<div class="col-md-6">
+			<div id="controls">
+				<h3>Lights</h3>
+					<button type="button" class="btn btn-outline-warning" data-command="TWEEN" data-target="LIGHT">Light</button>
+					<button type="button" class="btn btn-outline-warning" data-command="TWEEN" data-target="BACKLIGHT">Backlight</button>
+					<button type="button" class="btn btn-outline-warning" data-command="TWEEN" data-target="ENGINE">Engine</button>
+					<button type="button" class="btn btn-outline-warning" data-command="TWEEN" data-target="LASER">Laser</button>
+				</div>
+
+				<div>
+					<h3>Sounds</h3>
+					<button type="button" class="btn btn-outline-warning" data-command="ENGINE">Start</button>
+					<button type="button" class="btn btn-outline-warning" data-command="HORN">Horn</button>
+					<button type="button" class="btn btn-outline-warning" data-command="MEOW">Meow</button>
+				</div>
+
+				<div>
+					<h3>General</h3>
+					<button type="button" class="btn btn-outline-warning" data-command="RESET">Reset</button>
+				</div>
+
+			</div>
+
+			<div id="status">
+				<h3>Movement</h3>
+				<label for="y">Y</label>
+				<span id="y">?</span><br>
+				<label for="x">X</label>
+				<span id="x">?</span>
+			</div>
+
+		</div>
+
+		<h3>Vehicle</h3>
+		<div class="col-md-6">
 			<div id="output"></div>
 		</div>
-		<div class="col-md-4">
-			<div id="status">
-				Y:<span id="y">?</span><br>
-				X:<span id="x">?</span>
-			</div>
-		</div>
+
 	</div>
 

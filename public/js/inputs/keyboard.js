@@ -36,6 +36,7 @@ const keyboardFilter = (keystream) => {
 		.map(group => group.map(coordinates))
 		.flatMap(combine)
 		.mergeAll()
+		.map(data => ({ command: 'DRIVE', ...data }))
 }
 
 export {keyboardFilter}

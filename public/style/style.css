@@ -2,8 +2,14 @@ html {
 	padding: 1em;
 }
 
-body{
+body {
 	font-size: 12px;
+	color: silver;
+	background-color: black;
+}
+
+body.error {
+	background: darkred;
 }
 
 #output{

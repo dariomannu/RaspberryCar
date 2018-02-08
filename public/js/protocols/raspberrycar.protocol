@@ -1,0 +1,9 @@
+// ASN.1?
+{
+	'ENGINE': {
+		description: "Start the Engine"
+		request: () => { command: 'ENGINE' }
+		response: () => { response: 'OK' }
+	}
+}
+

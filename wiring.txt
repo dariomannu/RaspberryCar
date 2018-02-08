@@ -1,0 +1,39 @@
+(PI) PI GPIO
+
+	(PWM) White   x
+	(PWM) Green   (HC-SR04) Purple
+	(PWM) Blue    (HC-SR04) Black
+	(PWM) Red     x
+	(PWM) Black   x
+	x             (HC-SR04) White
+	x             x
+	x             (HC-SR04) Grey
+
+
+(PWM) PCA9685
+	GND     (PI) Black     GND     (BAT) GND
+	OE      (PI) Red       OE      (   )
+	SCL     (PI) Blue      SCL     (   )
+	SDA     (PI) Green     SDA     (   )
+	VCC     (PI) White     VCC     (   )
+	V+        x            V+        x
+
+
+                V+     GND
+              (BAT) V+  (BAT) GND
+
+       PWM   (L298n)purple  (L298n)yellow (L298n)green (L298n)blue
+       V+
+       GND
+
+(HC-SR04) Distance
+	GND       Black
+	Echo      Grey
+	Trig      White
+	VCC 5V    Purple
+
+(POW) L298N
+   OUT1/2 FWD/REV
+   OUT3/4 LEFT/RIGHT (blue/brown)
+   
+

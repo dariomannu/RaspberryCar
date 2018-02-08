@@ -1,13 +1,11 @@
 //import {Rx} from './Rx.js';
 
-const	origo = {x: 0, y: 0}
+const	origo = { command: 'DRIVE', x: 0, y: 0 }
 
-const unload    = Rx.Observable.fromEvent(window, 'unload')
-const lostfocus = Rx.Observable.fromEvent(window, 'blur')
-
-const page = Rx.Observable
-	.merge(unload, lostfocus)
-	.mapTo(origo)
+const page = {
+	unload: window => Rx.Observable.fromEvent(window, 'unload').mapTo(origo),
+	blur:   window => Rx.Observable.fromEvent(window, 'blur'  ).mapTo(origo),
+}
 
 export {page}
 

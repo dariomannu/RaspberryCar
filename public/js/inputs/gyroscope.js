@@ -1,12 +1,12 @@
 //import {Rx} from './Rx.js';
 
 const filter_low = 0.2
-const resolution = 2
+const resolution = 3
 
 const sgn = x => x>0?1:x<0?-1:0
 
 const coordinates = e => {
-	let b = Math.min(1, Math.abs(e.beta /45))
+	let b = Math.min(1, Math.abs(e.beta  /45))
 	let g = Math.min(1, Math.abs(e.gamma /45))
 
 	if(Math.abs(b) < filter_low)
@@ -15,15 +15,13 @@ const coordinates = e => {
 		g = 0
 
 	return {
+		command: 'DRIVE',
 		x:  sgn(e.gamma) *g.toFixed(resolution),
 		y: -sgn(e.beta)  *b.toFixed(resolution),
 	}
 }
 
-const gyroscopeFilter = (events) => {
-	return events
-		.map(coordinates)
-}
+const gyroscopeFilter = events => events.map(coordinates)
 
 export {gyroscopeFilter}
 

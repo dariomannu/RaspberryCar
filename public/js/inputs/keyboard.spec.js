@@ -3,27 +3,27 @@ import {keyboardFilter} from './keyboard.js'
 
 describe("keyboard", () => {
 	const inputs = {
-		L: {key: 'ArrowLeft',  type: 'keydown'},
-		R: {key: 'ArrowRight', type: 'keydown'},
-		F: {key: 'ArrowUp',    type: 'keydown'},
-		B: {key: 'ArrowDown',  type: 'keydown'},
-		l: {key: 'ArrowLeft',  type: 'keyup'},
-		r: {key: 'ArrowRight', type: 'keyup'},
-		f: {key: 'ArrowUp',    type: 'keyup'},
-		b: {key: 'ArrowDown',  type: 'keyup'},
+		L: { key: 'ArrowLeft',  type: 'keydown' },
+		R: { key: 'ArrowRight', type: 'keydown' },
+		F: { key: 'ArrowUp',    type: 'keydown' },
+		B: { key: 'ArrowDown',  type: 'keydown' },
+		l: { key: 'ArrowLeft',  type: 'keyup'   },
+		r: { key: 'ArrowRight', type: 'keyup'   },
+		f: { key: 'ArrowUp',    type: 'keyup'   },
+		b: { key: 'ArrowDown',  type: 'keyup'   },
 	}
 	
 	const outputs = {
-		L: {x: -1}, // Left
-		R: {x:  1}, // Right
-		F: {y:  1}, // Forward
-		B: {y: -1}, // Backward
-		l: {x:  0}, // not-left
-		r: {x:  0}, // not right
-		f: {y:  0}, // not forward
-		b: {y:  0}, // not backward
-		y: {x:  0}, // no-sideways (x=0)
-		x: {y:  0}, // no front-back (y=0)
+		L: { command: 'DRIVE', x: -1 }, // Left
+		R: { command: 'DRIVE', x:  1 }, // Right
+		F: { command: 'DRIVE', y:  1 }, // Forward
+		B: { command: 'DRIVE', y: -1 }, // Backward
+		l: { command: 'DRIVE', x:  0 }, // not-left
+		r: { command: 'DRIVE', x:  0 }, // not right
+		f: { command: 'DRIVE', y:  0 }, // not forward
+		b: { command: 'DRIVE', y:  0 }, // not backward
+		y: { command: 'DRIVE', x:  0 }, // no-sideways (x=0)
+		x: { command: 'DRIVE', y:  0 }, // no front-back (y=0)
 	}
 
 	const check = (m, input, subscription, output) => {
@@ -35,7 +35,7 @@ describe("keyboard", () => {
 	}
 
 	describe('simple movements', () => {
-		it("moves left", marbles((m) => {
+		it("drives left", marbles(m => {
 			const i = "--^----L--l--|"
 			const s =   "^----------!"
 			const o =   "-----L--y--|"
@@ -44,7 +44,7 @@ describe("keyboard", () => {
 		}))
 
 		'LRFB'.split('').forEach(dir => {
-			it(`moves ${dir}`, marbles((m) => {
+			it(`drives ${dir}`, marbles(m => {
 				const i = `--^----%--@--%@--%%%%%--@@@@@----%%@%-|`.replace(/%/g, dir).replace(/@/g, dir.toLowerCase())
 				const s =   '^-----------------------------------!'
 				const o =   `-----%--@--%@--%------@--------%-@%-|`.replace(/%/g, dir).replace(/@/g, dir.toLowerCase())
@@ -53,7 +53,7 @@ describe("keyboard", () => {
 			}))
 		})
 
-		it("sends correct x,y coordinates in the correct sequence", marbles((m) => {
+		it("sends correct x,y coordinates in the correct sequence", marbles(m => {
 			let i,s,o
 			i = "--^--L--F--lf----L-B--lb----R-B--r-b-|"
 			s =   "^----------------------------------!"
@@ -64,7 +64,7 @@ describe("keyboard", () => {
 	})
 
 	describe('opposite keys', () => {
-		it("clears out two opposite L-R keystrokes", marbles((m) => {
+		it("clears out two opposite L-R keystrokes", marbles(m => {
 			const i = "--^----L-R-RRR---F-B-BB-|"
 			const s =   "^---------------------!"
 			const o =   "-----L-y-------F-x----|"
@@ -72,7 +72,7 @@ describe("keyboard", () => {
 			check(m, i, s, o)
 		}))
 
-		it("nulls out two opposite F-B keystrokes", marbles((m) => {
+		it("nulls out two opposite F-B keystrokes", marbles(m => {
 			const i = "--^----F-B-BB-----|"
 			const s =   "^---------------!"
 			const o =   "-----F-x--------|"
@@ -80,7 +80,7 @@ describe("keyboard", () => {
 			check(m, i, s, o)
 		}))
 
-		it("makes the correct keystroke prevail between opposites", marbles((m) => {
+		it("makes the correct keystroke prevail between opposites", marbles(m => {
 			let i,s,o
 			i = "--^----L-R-r-l---|"
 			s =   "^--------------!"
